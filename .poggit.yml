@@ -2,6 +2,10 @@
 build-by-default: true
 branches:
 - main
+libs: 
+- {
+  src: Muqsit/InvMenu/InvMenu
+}
 projects:
   Pockit:
     path: ""
