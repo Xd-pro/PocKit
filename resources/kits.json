@@ -1,14 +1,12 @@
 {
+    "version": 1,
     "kits": {
         "PvP": {
             "private": false,
             "cooldown": 240,
             "clear": true,
-            "items": [
-                {
-                    
-                }
-            ]
+            "items": [],
+            "aliases": ["fight", "kill"]
         }
     }
 }

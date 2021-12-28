@@ -10,6 +10,7 @@ use dktapps\pmforms\element\Input;
 use dktapps\pmforms\MenuForm;
 use dktapps\pmforms\MenuOption;
 use LemoniqPvP\PocKit\Main;
+use pocketmine\inventory\Inventory;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
@@ -76,7 +77,9 @@ class PresetForms {
                     self::kitEditSelection($player, $kitId);
                 }
 
-                
+                if ($selectedOption === 3) {
+                    KitInventoryEditor::openEditor($player, $kitId);
+                }
             }
             
         );
