@@ -2,11 +2,13 @@
 build-by-default: true
 branches:
 - main
-libs: 
-- {
-  src: Muqsit/InvMenu/InvMenu
-}
 projects:
   Pockit:
     path: ""
+    libs:
+      - src: Muqsit/InvMenu/InvMenu
+        version: 4.3.5
+        branch: "4.0"
+      - src: dktapps-pm-pl/pmforms/pmforms
+        version: ~2.0.0
 ...
