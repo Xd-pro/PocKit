@@ -113,7 +113,6 @@ class PresetForms {
                         if ($choice) {
                             ConfigUtils::deleteKit($kitId);
                         }
-                        PresetForms::kitEditSelection($player, $kitId);
                     });
                     $player->sendForm($form);
                 }
