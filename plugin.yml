@@ -27,5 +27,4 @@ permissions:
   pockit.command.kit:
     description: Use kits
     default: true
-
 ...
