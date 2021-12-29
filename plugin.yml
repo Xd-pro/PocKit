@@ -3,7 +3,6 @@ name: PocKit
 version: 0.0.1
 main: LemoniqPvP\PocKit\Main
 api: 4.0.0
-src-namespace-prefix: LemoniqPvP\PocKit
 
 commands:
   kiteditor:
