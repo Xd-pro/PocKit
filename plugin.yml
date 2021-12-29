@@ -9,10 +9,24 @@ commands:
   kiteditor:
     permission: pockit.command.kiteditor
     description: Edit kits visually
+  createkit:
+    permission: pockit.command.createkit
+    description: Create new kits
+  kit:
+    permission: pockit.command.kit
+    description: Get a kit to help you out
   
 permissions:
   pockit.command.kiteditor:
     description: Edit kits visually
     default: op
+  
+  pockit.command.createkit:
+    description: Create new kits
+    default: op
+
+  pockit.command.kit:
+    description: Use kits
+    default: true
 
 ...

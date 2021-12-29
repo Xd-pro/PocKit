@@ -9,8 +9,12 @@ use dktapps\pmforms\element\CustomFormElement;
 use dktapps\pmforms\element\Input;
 use dktapps\pmforms\MenuForm;
 use dktapps\pmforms\MenuOption;
+use dktapps\pmforms\ModalForm;
 use LemoniqPvP\PocKit\Main;
+use LemoniqPvP\PocKit\tasks\CooldownTask;
 use pocketmine\inventory\Inventory;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
@@ -52,6 +56,8 @@ class PresetForms {
 
         $options[]=new MenuOption("Change items");
         $options[]=new MenuOption("Manage aliases");
+        $options[]=new MenuOption("Cooldown: " . TextFormat::BLUE . (string)$kit["cooldown"]);
+        $options[]=new MenuOption(TextFormat::RED . TextFormat::BOLD . "Delete");
 
         $form = new MenuForm(
             "Editing " . $kitId,
@@ -68,6 +74,9 @@ class PresetForms {
 
                 if ($selectedOption === 1) {
                     $kit["private"] = !$kit["private"];
+                    if ($kit["private"]) {
+                        PermissionManager::getInstance()->addPermission(new Permission("pockit.kit." . strtolower(str_replace(" ", "_",$kitId)), "Allows access to kit " . $kitId));
+                    }
                     ConfigUtils::updateKit($kitId, $kit);
                     self::kitEditSelection($player, $kitId);
                 }
@@ -84,6 +93,29 @@ class PresetForms {
 
                 if ($selectedOption === 4) {
                     self::listEditor($player, "alias", $kit["aliases"], $kitId);
+                }
+
+                if ($selectedOption === 5) {
+                    self::prompt($player, "Edit cooldown", "Enter the new cooldown for the kit " . $kitId . " (seconds)...", function(Player $player, string $newCooldown) use ($kitId, $kit) {
+                        if (is_numeric($newCooldown) && !str_contains($newCooldown, ".")) {
+                            $kit["cooldown"] = (int)$newCooldown;
+                            ConfigUtils::updateKit($kitId, $kit);
+                            unset(CooldownTask::$cooldowns[$kitId]);
+                        } else {
+                            $player->sendMessage("Please enter a valid number");
+                        }
+                        
+                    });
+                }
+
+                if ($selectedOption === 6) {
+                    $form = new ModalForm("Kit " . $kitId, "Are you sure you want to delete the kit " . $kitId . "?" , function(Player $player, bool $choice) use ($kitId, $kit): void {
+                        if ($choice) {
+                            ConfigUtils::deleteKit($kitId);
+                        }
+                        PresetForms::kitEditSelection($player, $kitId);
+                    });
+                    $player->sendForm($form);
                 }
             }
             

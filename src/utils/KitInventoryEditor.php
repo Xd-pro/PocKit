@@ -14,7 +14,7 @@ class KitInventoryEditor {
     public static function openEditor(Player $player, string $kitId) {
         $config = Main::$instance->kits;
         $kits = $config->get("kits", null);
-        $menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
+        $menu = InvMenu::create(InvMenu::TYPE_CHEST);
         $kit = $kits[$kitId];
 
         $items = [];
