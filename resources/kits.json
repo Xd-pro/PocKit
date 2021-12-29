@@ -3,10 +3,40 @@
     "kits": {
         "PvP": {
             "private": false,
-            "cooldown": 240,
+            "cooldown": 0,
             "clear": true,
-            "items": [],
-            "aliases": ["fight", "kill"]
+            "items": [
+                {
+                    "id": 276
+                },
+                {
+                    "id": 306
+                },
+                {
+                    "id": 307
+                },
+                {
+                    "id": 308
+                },
+                {
+                    "id": 309
+                },
+                {
+                    "id": 261
+                },
+                {
+                    "id": 262,
+                    "count": 16
+                },
+                {
+                    "id": 322,
+                    "count": 8
+                }
+            ],
+            "aliases": [
+                "fight",
+                "kill"
+            ]
         }
     }
 }
