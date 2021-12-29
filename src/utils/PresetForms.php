@@ -51,6 +51,7 @@ class PresetForms {
         }
 
         $options[]=new MenuOption("Change items");
+        $options[]=new MenuOption("Manage aliases");
 
         $form = new MenuForm(
             "Editing " . $kitId,
@@ -80,8 +81,106 @@ class PresetForms {
                 if ($selectedOption === 3) {
                     KitInventoryEditor::openEditor($player, $kitId);
                 }
+
+                if ($selectedOption === 4) {
+                    self::listEditor($player, "alias", $kit["aliases"], $kitId);
+                }
             }
             
+        );
+
+        $player->sendForm($form);
+    }
+
+    public static function listEditor(Player $player, string $name, array $array, string $kitId) {
+        $listItems = implode(", ", $array);
+
+        $options = [new MenuOption("Add"), new MenuOption("Remove"), new MenuOption("Edit")];
+
+        $form = new MenuForm(
+            "Edit ".$name."es",
+            "There are currently " . count($array) . " ". $name ."es: \n" . $listItems,
+            $options,
+            function(Player $player, int $selectedOption) use ($name, &$array, $kitId): void  {
+                if ($selectedOption === 0) {
+                    self::prompt($player, "Create $name", "Enter the new $name", function(Player $player, string $newAlias) use (&$array, $name, $kitId): void {
+                        $array[]= $newAlias;
+                        $kits = Main::$instance->kits->get("kits");
+                        $kit = $kits[$kitId];
+
+                        $kit[$name . "es"] = $array;
+
+                        ConfigUtils::updateKit($kitId, $kit);
+                        self::kitEditSelection($player, $kitId);
+                    });
+                }
+                if ($selectedOption === 1) {
+                    
+                    $options = [];
+                    
+                    foreach ($array as $item) {
+                        $options[]= new MenuOption($item);
+                    }
+
+                    $form = new MenuForm("Remove $name", "Choose a $name to remove", $options, function(Player $player, int $selectedOption) use ($kitId, &$array, $name): void {
+                        
+                        $array = array_filter($array, function($item) use ($selectedOption, $array) {
+                            if ($item === $array[$selectedOption]) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        });
+                    
+                        $kits = Main::$instance->kits->get("kits");
+                        $kit = $kits[$kitId];
+
+                        $kit[$name . "es"] = $array;
+
+                        ConfigUtils::updateKit($kitId, $kit);
+                        self::kitEditSelection($player, $kitId);
+                    });
+
+                    $player->sendForm($form);
+                }
+                if ($selectedOption === 2) {
+                    
+                    $options = [];
+                    
+                    foreach ($array as $item) {
+                        $options[]= new MenuOption($item);
+                    }
+
+                    $form = new MenuForm("Edit $name", "Choose a $name to edit", $options, function(Player $player, int $selectedOption) use ($kitId,$array, $name): void  {
+                        Main::$instance->getLogger()->info(json_encode($array));
+                        foreach ($array as $index => $value) {
+                            if ($index === $selectedOption) {
+                                self::prompt($player, "Edit " . $array[$selectedOption], "Enter the new alias", function(Player $player, string $newValue) use ($kitId,&$array, $selectedOption, $name): void {
+                                    $array = array_filter($array, function($item) use ($selectedOption, $array) {
+                                        if ($item === $array[$selectedOption]) {
+                                            return false;
+                                        } else {
+                                            return true;
+                                        }
+                                    });
+
+                                    $array[] = $newValue;
+
+                                    $kits = Main::$instance->kits->get("kits");
+                                    $kit = $kits[$kitId];
+
+                                    $kit[$name . "es"] = $array;
+
+                                    ConfigUtils::updateKit($kitId, $kit);
+                                    self::kitEditSelection($player, $kitId);
+                                });
+                            }
+                        }
+                    });
+
+                    $player->sendForm($form);
+                }
+            }
         );
 
         $player->sendForm($form);
