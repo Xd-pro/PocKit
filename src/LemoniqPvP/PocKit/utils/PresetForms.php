@@ -114,7 +114,7 @@ class PresetForms {
                             ConfigUtils::deleteKit($kitId);
                         }
                     });
-                    $player->sendForm($form);
+                    $player ->sendForm($form);
                 }
             }
             
