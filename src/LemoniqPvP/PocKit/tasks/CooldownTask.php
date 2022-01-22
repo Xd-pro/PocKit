@@ -27,7 +27,6 @@ class CooldownTask extends Task {
         }
         Main::$instance->cooldowns->setAll(self::$cooldowns);
         Main::$instance->cooldowns->save();
-        Main::$instance->cooldowns->reload();
     }
 
 }
