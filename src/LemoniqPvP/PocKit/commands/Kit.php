@@ -2,6 +2,7 @@
 
 namespace LemoniqPvP\PocKit\commands;
 
+use dktapps\pmforms\FormIcon;
 use dktapps\pmforms\MenuForm;
 use dktapps\pmforms\MenuOption;
 use LemoniqPvP\PocKit\Main;
@@ -37,7 +38,11 @@ class Kit implements CommandExecutor {
                     }
 
                     if ($canUseKit) {
-                        $options[]=new MenuOption($name);
+                        if (isset($kit["icon"]) && $kit["icon"] !== "") {
+                            $options[]=new MenuOption($name, new FormIcon($kit["icon"], FormIcon::IMAGE_TYPE_PATH));
+                        } else {
+                            $options[]=new MenuOption($name);
+                        }
                         $optionIds[]=$name;
                     }
                 }

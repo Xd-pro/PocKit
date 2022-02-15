@@ -57,6 +57,7 @@ class PresetForms {
         $options[]=new MenuOption("Change items");
         $options[]=new MenuOption("Manage aliases");
         $options[]=new MenuOption("Cooldown: " . TextFormat::BLUE . (string)$kit["cooldown"]);
+        $options[]=new MenuOption("Change icon");
         $options[]=new MenuOption(TextFormat::RED . TextFormat::BOLD . "Delete");
 
         $form = new MenuForm(
@@ -104,11 +105,23 @@ class PresetForms {
                         } else {
                             $player->sendMessage("Please enter a valid number");
                         }
-                        
+                        self::kitEditSelection($player, $kitId);
                     });
                 }
 
                 if ($selectedOption === 6) {
+                    self::prompt(
+                        $player, 
+                        "Edit icon", "Enter a texture path for the icon of the kit " . $kitId . "...",
+                        function(Player $player, string $path) use ($kitId, $kit) {
+                            $kit["icon"] = $path;
+                            ConfigUtils::updateKit($kitId, $kit);
+                            self::kitEditSelection($player, $kitId);
+                        }
+                    );
+                }
+
+                if ($selectedOption === 7) {
                     $form = new ModalForm("Kit " . $kitId, "Are you sure you want to delete the kit " . $kitId . "?" , function(Player $player, bool $choice) use ($kitId, $kit): void {
                         if ($choice) {
                             ConfigUtils::deleteKit($kitId);
